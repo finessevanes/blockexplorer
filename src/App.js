@@ -1,5 +1,6 @@
 import { Alchemy, Network, Utils } from "alchemy-sdk";
 import { useEffect, useState } from "react";
+import Loading from "./components/Loading";
 
 import "./App.css";
 
@@ -20,6 +21,7 @@ const alchemy = new Alchemy(settings);
 
 function App() {
   const [blockNumber, setBlockNumber] = useState();
+  const [isLoading, setIsLoading] = useState(true);
   const [searchValue, setSearchValue] = useState("");
   const [blockTransactions, setBlockTransactions] = useState([]);
   const [blockData, setBlockData] = useState();
@@ -29,8 +31,6 @@ function App() {
     e.preventDefault();
     console.log(searchValue);
   };
-
-  console.log(blockTransactions)
 
   useEffect(() => {
     async function getBlockNumber() {
@@ -52,6 +52,13 @@ function App() {
     getBlockData();
   }, [blockNumber]);
 
+  useEffect(() => {
+    if (blockTransactions.length) {
+      console.log(blockTransactions);
+      setIsLoading(false);
+    }
+  }, [blockTransactions]);
+
   return (
     <div className="bg-gray-900 text-white min-h-screen p-8">
       <h1 className="text-3xl font-medium mb-4">Block Explorer</h1>
@@ -71,26 +78,38 @@ function App() {
           Search
         </button>
       </form>
-      <div className="flex">
-        <div>
-          <h1 className="text-lg font-medium mb-2">Latest Blocks</h1>
-          {entriesToShow.map((num, i) => (
-            <div key={i} className="bg-gray-800 rounded-lg p-4 basis-1/2 mb-2">
-              <h2 className="text-lg font-medium mb-2">
-                Block Number: {blockNumber - num}
-              </h2>
-            </div>
-          ))}
-        </div>
-        <div className="ml-20">
-          <h1 className="text-lg font-medium mb-2">Latest Transactions</h1>
-          <div className="bg-gray-800 rounded-lg p-4 basis-1/2">
-            <h2 className="text-lg font-medium mb-2">
-              Block Tran: {blockNumber}
-            </h2>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <div className="flex">
+          <div>
+            <h1 className="text-lg font-medium mb-2">Latest Blocks</h1>
+            {entriesToShow.map((num, i) => (
+              <div
+                key={i}
+                className="bg-gray-800 rounded-lg p-4 basis-1/2 mb-2"
+              >
+                <h2 className="text-lg font-medium mb-2">
+                  Block Number: {blockNumber - num}
+                </h2>
+              </div>
+            ))}
+          </div>
+          <div className="ml-20">
+            <h1 className="text-lg font-medium mb-2">Latest Transactions</h1>
+            {blockTransactions.map((transaction, i) => (
+              <div className="bg-gray-800 rounded-lg p-4 basis-1/2 mb-2">
+                <h2 className="text-lg font-medium mb-2">
+                  Block Transactions:{" "}
+                  {`${transaction.hash.slice(0, 5)}...${transaction.hash.slice(
+                    60
+                  )}`}
+                </h2>
+              </div>
+            ))}
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
