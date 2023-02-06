@@ -27,7 +27,6 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchValue, setSearchValue] = useState("");
   const [blockTransactions, setBlockTransactions] = useState([]);
-  const [blockData, setBlockData] = useState();
   const entriesToShow = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
   const handleSubmit = (e) => {
@@ -48,7 +47,6 @@ function App() {
       await alchemy.core
         .getBlockWithTransactions(blockNumber)
         .then((response) => {
-          setBlockData(response);
           setBlockTransactions(response.transactions);
         });
     }
