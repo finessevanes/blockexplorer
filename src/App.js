@@ -31,8 +31,15 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    getBalance()
     console.log(searchValue);
   };
+
+  async function getBalance(){
+    let _balance = await alchemy.core.getBalance(`${searchValue}`, "finalized")
+    let formattedBalance = Utils.formatEther(_balance).substring(0,4)
+    console.log(formattedBalance, 'ETH')
+  }
 
   useEffect(() => {
     async function getBlockNumber() {
