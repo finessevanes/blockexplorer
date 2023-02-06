@@ -55,7 +55,6 @@ function App() {
 
   useEffect(() => {
     if (blockTransactions.length) {
-      console.log(blockTransactions);
       setIsLoading(false);
     }
   }, [blockTransactions]);
