@@ -1,7 +1,6 @@
 import { Alchemy, Network, Utils } from "alchemy-sdk";
 import { useEffect, useState } from "react";
 import Loading from "./components/Loading";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import BlockContainer from "./components/BlockContainer";
 import TxnContainer from "./components/TxnContainer";
 
@@ -31,6 +30,7 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     console.log(searchValue);
   };
 
