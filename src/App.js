@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Loading from "./components/Loading";
 import BlockContainer from "./components/BlockContainer";
 import TxnContainer from "./components/TxnContainer";
+import { useHistory, Link } from "react-router-dom";
 
 import "./App.css";
 
@@ -14,11 +15,6 @@ const settings = {
   network: Network.ETH_MAINNET,
 };
 
-// In this week's lessons we used ethers.js. Here we are using the
-// Alchemy SDK is an umbrella library with several different packages.
-//
-// You can read more about the packages here:
-//   https://docs.alchemy.com/reference/alchemy-sdk-api-surface-overview#api-surface
 const alchemy = new Alchemy(settings);
 
 function App() {
@@ -28,17 +24,23 @@ function App() {
   const [blockTransactions, setBlockTransactions] = useState([]);
   const entriesToShow = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
+  const history = useHistory();
+
+  const handleTxnClick = () => {
+    history.push("/transactions");
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    getBalance()
+    getBalance();
     console.log(searchValue);
   };
 
-  async function getBalance(){
-    let _balance = await alchemy.core.getBalance(`${searchValue}`, "finalized")
-    let formattedBalance = Utils.formatEther(_balance).substring(0,4)
-    console.log(formattedBalance, 'ETH')
+  async function getBalance() {
+    let _balance = await alchemy.core.getBalance(`${searchValue}`, "finalized");
+    let formattedBalance = Utils.formatEther(_balance).substring(0, 4);
+    console.log(formattedBalance, "ETH");
   }
 
   useEffect(() => {
@@ -97,9 +99,21 @@ function App() {
           </div>
           <div className="ml-20">
             <h1 className="text-lg font-medium mb-2">Latest Transactions</h1>
-            {blockTransactions.slice(0, 10).map((transaction, i) => (
-              <TxnContainer key={i} transaction={transaction} />
-            ))}
+            {blockTransactions.slice(0, 10).map((transaction, i) => {
+              return (
+                <Link
+                to={{
+                  pathname: "/transactions",
+                  state: { transaction: transaction },
+                }}
+                onClick={() => handleTxnClick()}
+                key={i}
+                transaction={transaction}
+              >
+                <TxnContainer key={i} transaction={transaction} />
+               </Link>
+              )
+            })}
           </div>
         </div>
       )}
