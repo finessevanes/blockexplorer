@@ -26,9 +26,8 @@ function App() {
 
   const history = useHistory();
 
-  const handleTxnClick = () => {
-    history.push("/transactions");
-  };
+
+  const handleTxnClick = () => history.push('/transactions');
 
   const handleSubmit = (e) => {
     e.preventDefault();
